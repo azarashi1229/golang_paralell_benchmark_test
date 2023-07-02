@@ -4,3 +4,9 @@
 ```
 go test -bench .
 ```
+
+他、これらにもオプションが記載してある。
+https://www.wakuwakubank.com/posts/811-go-benchmark/
+
+公式ドキュメントはこちら
+https://pkg.go.dev/testing
