@@ -6,27 +6,33 @@ import (
 	"testing"
 )
 
-var (
-	counter int64
-	mu      sync.Mutex
-)
-
 func BenchmarkMutex(b *testing.B) {
+	var (
+		counter int64
+		mu      sync.Mutex
+	)
+
 	b.ResetTimer()
-	for i := 0; i < b.N; i++ {
-		mu.Lock()
-		counter++
-		mu.Unlock()
-	}
+	b.RunParallel(func(pb *testing.PB) {
+		for pb.Next() {
+			go func() {
+				mu.Lock()
+				counter++
+				mu.Unlock()
+			}()
+		}
+	})
 }
 
-var (
-	counter2 int64
-)
-
 func BenchmarkAtomic(b *testing.B) {
+	var counter int64
+
 	b.ResetTimer()
-	for i := 0; i < b.N; i++ {
-		atomic.AddInt64(&counter2, 1)
-	}
+	b.RunParallel(func(pb *testing.PB) {
+		for pb.Next() {
+			go func() {
+				atomic.AddInt64(&counter, 1)
+			}()
+		}
+	})
 }
