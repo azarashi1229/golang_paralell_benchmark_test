@@ -1,4 +1,4 @@
-package main
+package use_gorutine
 
 import (
 	"sync"
